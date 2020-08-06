@@ -31,7 +31,7 @@ public class Book {
         this.name = name;
     }
 
-    public Book(String text) {
-        this.name = text;
+    public Book(String name) {
+        this.name = name;
     }
 }
