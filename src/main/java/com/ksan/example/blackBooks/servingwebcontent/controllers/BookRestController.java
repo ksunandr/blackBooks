@@ -4,10 +4,7 @@ import com.ksan.example.blackBooks.servingwebcontent.entities.Book;
 import com.ksan.example.blackBooks.servingwebcontent.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/rest")
@@ -24,6 +21,19 @@ public class BookRestController {
    @GetMapping(path="/{id}")
     public @ResponseBody Book getBook(@PathVariable(value = "id") Integer id) {
         return bookRepository.findById(id).orElse(null);
+    }
+
+    @PostMapping(path = "/add")
+    public @ResponseBody Book addNewBook(@RequestParam(name = "name") String name,
+                             @RequestParam(name = "author") String author,
+                             @RequestParam(name = "qnt", required = false, defaultValue = "0") Integer qnt,
+                             @RequestParam(name = "year") Integer year) {
+        Book book = new Book(name);
+        book.setAuthor(author);
+        book.setInStock(qnt);
+        book.setPublicationYear(year);
+        bookRepository.save(book);
+        return book;
     }
 
 }
