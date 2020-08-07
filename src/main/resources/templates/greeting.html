@@ -2,23 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<p th:text="'Hello, ' + ${name} + '!'" />
-<table>
-    <tr>
-        <th>ID</th>
-        <th>NAME</th>
-<!--        <th>PRICE</th>-->
-<!--        <th>IN STOCK</th>-->
-    </tr>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}"/>
-        <td th:text="${book.name}"/>
-<!--        <td th:text="${book.price}">2.41</td>-->
-<!--        <td th:text="${book.inStock}? #{true} : #{false}">yes</td>-->
-    </tr>
-</table>
+<p th:text="'Hello, ' + ${name} + '!'"/>
+<a href="/books">Main Page</a>
 </body>
 </html>
