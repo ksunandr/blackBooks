@@ -25,8 +25,11 @@ public class GreetingController {
     }
 
     @GetMapping()
-    public String startPage(String name, Model model) {
-        model.addAttribute("name", "World");
+    public String startPage(String name,  Map<String, Object> model) {
+        model.put("name", "World");
+        Iterable<Book> books = bookRepository.findAll();
+
+        model.put("books", books);
         return "greeting";
     }
 
@@ -36,10 +39,10 @@ public class GreetingController {
         Book book = new Book(name);
         bookRepository.save(book);
 
-        //Iterable<Book> books = bookRepository.findAll();
+      Iterable<Book> books = bookRepository.findAll();
 
-//        model.put("messages", books);
-//        model.put("start_info", "start_info");
+        model.put("books", books);
+        //model.put("start_info", "start_info");
 
         return "greeting";
     }

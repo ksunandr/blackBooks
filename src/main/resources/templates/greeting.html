@@ -6,5 +6,19 @@
 </head>
 <body>
 <p th:text="'Hello, ' + ${name} + '!'" />
+<table>
+    <tr>
+        <th>ID</th>
+        <th>NAME</th>
+<!--        <th>PRICE</th>-->
+<!--        <th>IN STOCK</th>-->
+    </tr>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"/>
+        <td th:text="${book.name}"/>
+<!--        <td th:text="${book.price}">2.41</td>-->
+<!--        <td th:text="${book.inStock}? #{true} : #{false}">yes</td>-->
+    </tr>
+</table>
 </body>
 </html>
