@@ -7,12 +7,15 @@ import javax.persistence.*;
 @Entity
 public class Book {
 
-    public Book() {
+        public Book() {
     }
 
     public Book(String name) {
         this.name = name;
     }
+
+    @Version
+    private long version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
