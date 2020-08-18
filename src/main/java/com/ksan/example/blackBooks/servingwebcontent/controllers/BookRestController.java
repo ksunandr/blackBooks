@@ -1,8 +1,10 @@
 package com.ksan.example.blackBooks.servingwebcontent.controllers;
 
+import com.ksan.example.blackBooks.servingwebcontent.entities.Author;
 import com.ksan.example.blackBooks.servingwebcontent.entities.Book;
 import com.ksan.example.blackBooks.servingwebcontent.exceptions.NoBookException;
 import com.ksan.example.blackBooks.servingwebcontent.exceptions.RunOutOfBooksException;
+import com.ksan.example.blackBooks.servingwebcontent.repositories.AuthorRepository;
 import com.ksan.example.blackBooks.servingwebcontent.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,13 +14,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceUnit;
+import java.util.List;
 
 @Controller
-@RequestMapping("/rest")
+@RequestMapping("/book")
 public class BookRestController {
 
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
@@ -42,15 +47,22 @@ public class BookRestController {
     @PostMapping(path = "/add")
     public @ResponseBody
     Book addNewBook(@RequestParam(name = "name") String name,
-                    @RequestParam(name = "author") String author,
+                    @RequestParam(name = "authors") List<Integer> authorIds,
                     @RequestParam(name = "qnt", required = false, defaultValue = "0") Integer qnt,
                     @RequestParam(name = "year") Integer year) {
         Book book = new Book(name);
-        book.setAuthor(author);
+        book.setAuthors(getAuthors(authorIds));
+
         book.setInStock(qnt);
         book.setPublicationYear(year);
         bookRepository.save(book);
         return book;
+    }
+
+    public List<Author> getAuthors(List<Integer> ids) {
+
+        return authorRepository.findByIdIn(ids);
+
     }
 
     @PostMapping(path = "/edit/{id}")
@@ -58,14 +70,14 @@ public class BookRestController {
     Book updateBook(
             @PathVariable(value = "id") Integer id,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "author", required = false) String author,
+            @RequestParam(name = "authors", required = false) List<Integer> authorIds,
             @RequestParam(name = "qnt", required = false) Integer qnt,
             @RequestParam(name = "year", required = false) Integer year) throws NoBookException { //todo dto
 
         Book book = bookRepository.findById(id).orElseThrow(() -> new NoBookException(id));
 
         if (name != null) book.setName(name);
-        if (author != null) book.setAuthor(author);
+        if (authorIds != null) book.setAuthors(getAuthors(authorIds));
         if (qnt != null) book.setInStock(qnt);
         if (year != null) book.setPublicationYear(year);
         bookRepository.save(book);

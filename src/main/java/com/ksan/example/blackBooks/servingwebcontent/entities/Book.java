@@ -2,6 +2,8 @@ package com.ksan.example.blackBooks.servingwebcontent.entities;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -23,7 +25,13 @@ public class Book {
 
     private String name;
 
-    private String author;
+    @ManyToMany
+    @JoinTable(
+            name="AUTHORS_BOOKS",
+            joinColumns = {@JoinColumn(name = "book_id")},
+            inverseJoinColumns = {@JoinColumn(name = "author_id")}
+    )
+    private List<Author> authors = new ArrayList<>();
 
     private Integer publicationYear;
 
@@ -45,12 +53,14 @@ public class Book {
         this.name = name;
     }
 
-    public String getAuthor() {
-        return author;
+
+
+    public List<Author> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
 
     public Integer getPublicationYear() {
@@ -68,4 +78,6 @@ public class Book {
     public void setInStock(Integer inStock) {
         this.inStock = inStock;
     }
+
+
 }
