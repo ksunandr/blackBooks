@@ -1,6 +1,8 @@
 package com.ksan.example.blackBooks.servingwebcontent.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ public class Book {
 
     private String name;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name="AUTHORS_BOOKS",
@@ -36,6 +39,7 @@ public class Book {
     private Integer publicationYear;
 
     private Integer inStock;
+
 
     public Integer getId() {
         return id;

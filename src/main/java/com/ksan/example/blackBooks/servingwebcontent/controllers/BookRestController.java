@@ -6,6 +6,7 @@ import com.ksan.example.blackBooks.servingwebcontent.exceptions.NoBookException;
 import com.ksan.example.blackBooks.servingwebcontent.exceptions.RunOutOfBooksException;
 import com.ksan.example.blackBooks.servingwebcontent.repositories.AuthorRepository;
 import com.ksan.example.blackBooks.servingwebcontent.repositories.BookRepository;
+import com.ksan.example.blackBooks.servingwebcontent.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,16 @@ public class BookRestController {
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
+    @Autowired
+    private BookService bookService;
+
+    ///for terminal curl http://localhost:8080/rest/15
+    @GetMapping(path = "/{id}")
+    public @ResponseBody
+    Book getBook(@PathVariable(value = "id") Integer id) {
+        return bookRepository.findById(id).orElse(null);
+    }//todo??? null??
+
     @GetMapping()
     public @ResponseBody
     Iterable<Book> getAllBooks() {
@@ -35,15 +46,21 @@ public class BookRestController {
     }
 
 
-
-  ///for terminal curl http://localhost:8080/rest/15
-    @GetMapping(path = "/{id}")
+   // @PostMapping("/filter")//todo??get for post curl http://localhost:8080/book/filter -d name=0000
+    @GetMapping("/filter")//curl localhost:8080/book/filter?name=1
     public @ResponseBody
-    Book getBook(@PathVariable(value = "id") Integer id) {
-        return bookRepository.findById(id).orElse(null);
+    Iterable<Book> filter(@RequestParam(name = "name", required = false) String name,
+                          @RequestParam(name = "authorName", required = false) String authorName
+                         // @RequestParam(name = "authorId", required = false) Integer authorId,
+                         // @RequestParam(name = "status", required = false) Boolean status
+    ) {
+
+        return bookService.filter(name, authorName);
     }
 
-    ///for terminal  curl http://localhost:8080/rest/add -d name=111 -d author=111 -d
+
+
+    ///for terminal  curl http://localhost:8080/book/add -d name=bookname -d authors=27,28 -d qnt=1 -d year=1111
     @PostMapping(path = "/add")
     public @ResponseBody
     Book addNewBook(@RequestParam(name = "name") String name,
@@ -52,7 +69,6 @@ public class BookRestController {
                     @RequestParam(name = "year") Integer year) {
         Book book = new Book(name);
         book.setAuthors(getAuthors(authorIds));
-
         book.setInStock(qnt);
         book.setPublicationYear(year);
         bookRepository.save(book);
@@ -94,20 +110,19 @@ public class BookRestController {
         Book book = entityManager.find(Book.class, id, LockModeType.PESSIMISTIC_READ);
 
         try {
-        if (book == null) throw new NoBookException(id);
-        if (book.getInStock() <= 0) throw new RunOutOfBooksException(id); //todo??
+            if (book == null) throw new NoBookException(id);
+            if (book.getInStock() <= 0) throw new RunOutOfBooksException(id); //todo??
 
 
             book.setInStock(book.getInStock() - 1);
 
-        entityManager.getTransaction().commit();
-        entityManager.close();
+            entityManager.getTransaction().commit();
+            entityManager.close();
 
+        } finally { //?
+            if (entityManager.getTransaction().isActive())
+                entityManager.getTransaction().rollback();
         }
-        finally { //?
-        if (entityManager.getTransaction().isActive())
-            entityManager.getTransaction().rollback();
-    }
 
         return book;
     }
