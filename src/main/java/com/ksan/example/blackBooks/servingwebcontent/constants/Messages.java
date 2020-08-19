@@ -1,4 +1,4 @@
-package com.ksan.example.blackBooks.servingwebcontent;
+package com.ksan.example.blackBooks.servingwebcontent.constants;
 
 abstract public class Messages {
 

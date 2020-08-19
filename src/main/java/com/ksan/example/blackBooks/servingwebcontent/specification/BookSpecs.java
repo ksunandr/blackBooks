@@ -1,4 +1,4 @@
-package com.ksan.example.blackBooks.servingwebcontent.repositories;
+package com.ksan.example.blackBooks.servingwebcontent.specification;
 
 import com.ksan.example.blackBooks.servingwebcontent.entities.Book;
 import org.springframework.data.jpa.domain.Specification;

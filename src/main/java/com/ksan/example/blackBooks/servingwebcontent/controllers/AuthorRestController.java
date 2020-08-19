@@ -1,7 +1,8 @@
 package com.ksan.example.blackBooks.servingwebcontent.controllers;
 
 import com.ksan.example.blackBooks.servingwebcontent.entities.Author;
-import com.ksan.example.blackBooks.servingwebcontent.repositories.AuthorRepository;
+import com.ksan.example.blackBooks.servingwebcontent.exceptions.NoAuthorsException;
+import com.ksan.example.blackBooks.servingwebcontent.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,30 +12,25 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorRestController {
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private AuthorService authorService;
 
     @GetMapping()
     public @ResponseBody
     Iterable<Author> getAll() {
-        return authorRepository.findAll();
+        return authorService.findAll();
     }
 
-    ///for terminal curl http://localhost:8080/rest/15
     @GetMapping(path = "/{id}")
     public @ResponseBody
-    Author getById(@PathVariable(value = "id") Integer id) {
-        return authorRepository.findById(id).orElse(null);
+    Author getById(@PathVariable(value = "id") Integer id) throws NoAuthorsException {
+        return authorService.findById(id);
     }
-
-    ///for terminal  curl http://localhost:8080/author/add -d name=111 -d surname=111 -d patronymic=111
 
     @PostMapping(path = "/add")
     public @ResponseBody
     Author addNewAuthor(@RequestParam(name = "name") String name,
                         @RequestParam(name = "surname") String surname,
                         @RequestParam(name = "patronymic") String patronymic) {
-        Author author = new Author(name, surname, patronymic);
-        authorRepository.save(author);
-        return author;
+        return authorService.addNewAuthor(name, surname, patronymic);
     }
 }
