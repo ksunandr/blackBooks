@@ -26,19 +26,22 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
 
-    @Autowired
-    private BookJpaRepository bookRepository;
+    private final BookJpaRepository bookRepository;
 
-    @Autowired
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
+    @Autowired
+    public BookServiceImpl(BookJpaRepository bookRepository, AuthorService authorService) {
+        this.bookRepository = bookRepository;
+        this.authorService = authorService;
+    }
+
     @Override
     public Book findById(Integer id) throws NoBookException {
         return bookRepository.findById(id).orElseThrow(() -> new NoBookException(Messages.BOOK_WITH_SUCH_ID_DOESNT_EXIST, id));
-
     }
 
     @Override
@@ -60,7 +63,6 @@ public class BookServiceImpl implements BookService {
     public Page<Book> filter(String name, Integer leftYear, Integer rightYear, String authorName, Boolean status) {
         Pageable firstPageWithFiveElementsSortedByName =
                 PageRequest.of(0, 5, Sort.by("name"));
-
       return bookRepository.findAll(
               Specification
                       .where(BookSpecs.nameIs(name)
@@ -75,13 +77,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book updateBook(Integer id, String name, List<Integer> authorIds, Integer qnt, Integer year) throws NoBookException, NoAuthorsException {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NoBookException(Messages.BOOK_WITH_SUCH_ID_DOESNT_EXIST, id));
-
         if (name != null) book.setName(name);
         if (authorIds != null) book.setAuthors(authorService.getAuthors(authorIds));
         if (qnt != null) book.setInStock(qnt);
         if (year != null) book.setPublicationYear(year);
         bookRepository.save(book);
-
         return book;
     }
 

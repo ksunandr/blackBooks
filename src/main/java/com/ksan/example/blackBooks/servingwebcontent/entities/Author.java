@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -17,17 +16,6 @@ public class Author {
     private Integer id;
 
     public Author() {
-    }
-
-    public Author(String name) {
-        this.name = name;
-    }
-
-    public Author(String name, String surname, String patronymic, Set<Book> books) {
-        this.name = name;
-        this.surname = surname;
-        this.patronymic = patronymic;
-        //this.books = books;
     }
 
     public Author(String name, String surname, String patronymic) {
@@ -41,14 +29,13 @@ public class Author {
     private String patronymic;
 
     @JsonIgnore
-    @ManyToMany //todo??
+    @ManyToMany
     @JoinTable(
             name = "AUTHORS_BOOKS",
             inverseJoinColumns = {@JoinColumn(name = "author_id")},
             joinColumns = {@JoinColumn(name = "book_id")}
     )
     private List<Book> books = new ArrayList<>();
-
 
     public Integer getId() {
         return id;

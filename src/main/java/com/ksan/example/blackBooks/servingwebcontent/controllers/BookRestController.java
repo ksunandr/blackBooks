@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookRestController {
 
+    private final BookService bookService;
+
     @Autowired
-    private BookService bookService;
+    public BookRestController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @GetMapping(path = "/{id}")
     public @ResponseBody
@@ -30,13 +34,12 @@ public class BookRestController {
         return bookService.findAll();
     }
 
-    @PostMapping(path = "/add")
-    public @ResponseBody
+    @PostMapping()
+    public @ResponseBody//todo dto
     Book addNewBook(@RequestParam(name = "name") String name,
                     @RequestParam(name = "authors") List<Integer> authorIds,
                     @RequestParam(name = "qnt", required = false, defaultValue = "0") Integer qnt,
                     @RequestParam(name = "year") Integer year) throws NoAuthorsException {
-
         return bookService.addNewBook(name, authorIds, qnt, year);
     }
 
@@ -50,20 +53,18 @@ public class BookRestController {
         return bookService.filter(name, leftYear, rightYear, authorName, status);
     }
 
-
-    @PostMapping(path = "/edit/{id}")
+    @PutMapping(path = "/{id}")
     public @ResponseBody
     Book updateBook(
             @PathVariable(value = "id") Integer id,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "authorsIds", required = false) List<Integer> authorIds,
             @RequestParam(name = "qnt", required = false) Integer qnt,
-            @RequestParam(name = "year", required = false) Integer year) throws NoBookException, NoAuthorsException { //todo dto
-
+            @RequestParam(name = "year", required = false) Integer year) throws NoBookException, NoAuthorsException {
         return bookService.updateBook(id, name, authorIds, qnt, year);
     }
 
-    @PostMapping(path = "/buy")
+    @PutMapping(path = "/buy")
     public @ResponseBody
     Book buyBook(@RequestParam(name = "id") Integer id) throws NoBookException, RunOutOfBooksException {
         return bookService.buyBook(id);

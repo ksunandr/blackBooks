@@ -7,7 +7,6 @@ import javax.persistence.criteria.*;
 
 public final class BookSpecs {
 
-
     public static Specification<Book> nameIs(final String name) {
         return (Specification<Book>) (root, query, builder) -> name == null ? builder.conjunction() : builder.equal(root.get("name"), name);
     }

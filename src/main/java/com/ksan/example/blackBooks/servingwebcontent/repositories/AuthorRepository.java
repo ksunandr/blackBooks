@@ -7,11 +7,7 @@ import java.util.List;
 
 public interface AuthorRepository extends CrudRepository<Author, Integer> {
 
-    List<Author> findByNameIn(List<String> names);
-    List<Author> findByNameStartingWith(String name);
     List<Author> findByIdIn(List<Integer> ids);
-
-
 
 
 }

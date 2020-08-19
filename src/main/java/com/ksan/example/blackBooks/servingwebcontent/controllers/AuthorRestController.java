@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/author")
 public class AuthorRestController {
 
+    private final AuthorService authorService;
+
     @Autowired
-    private AuthorService authorService;
+    public AuthorRestController(AuthorService authorService) {
+        this.authorService = authorService;
+    }
 
     @GetMapping()
     public @ResponseBody
@@ -26,7 +30,7 @@ public class AuthorRestController {
         return authorService.findById(id);
     }
 
-    @PostMapping(path = "/add")
+    @PostMapping()
     public @ResponseBody
     Author addNewAuthor(@RequestParam(name = "name") String name,
                         @RequestParam(name = "surname") String surname,

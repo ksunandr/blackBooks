@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 public class Book {
 
-        public Book() {
+    public Book() {
     }
 
     public Book(String name) {
@@ -30,7 +30,7 @@ public class Book {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name="AUTHORS_BOOKS",
+            name = "AUTHORS_BOOKS",
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "author_id")}
     )
@@ -39,7 +39,6 @@ public class Book {
     private Integer publicationYear;
 
     private Integer inStock;
-
 
     public Integer getId() {
         return id;
@@ -56,8 +55,6 @@ public class Book {
     public void setName(String name) {
         this.name = name;
     }
-
-
 
     public List<Author> getAuthors() {
         return authors;
