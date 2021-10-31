@@ -35,5 +35,5 @@ Rest api:
 Spring. 
 ORM 
 No authorization
-any bd
-no front
+Any bd
+No front
