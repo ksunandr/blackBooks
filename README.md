@@ -25,7 +25,8 @@ Rest api:
      * Year range,
      * Author's last name,
      * status (absent: quantity = 0/ in stock: quantity > =1)
-    Attributes could be optional 
+    
+   Attributes could be optional 
    
 2. Add a book
 3. Update a book
