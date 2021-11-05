@@ -18,19 +18,19 @@ Author to Book connection is many to many.
 Relational database
 
 Rest api: 
-1. Получение списка книг по фильтру с пагинацией и сортировкой
+1. Get a list of books by filter with sorting and pagination
 
-    1.1. Атрибуты фильтра:
-     * название книги, 
-     * год издания: левая граница диапазона год издания, правая граница диапазона,
-     * фамилия автора,
-     * статус (отсутствует: кол-во книг = 0/ в наличии: кол-во > =1)
-    
-    1.2. Фильтр опциональный: в rest запросе может отсутствовать любой атрибут фильтра и, соответственно, в запросе к БД условие должно быть исключено. 
+    1.1. Filter:
+     * name of book, 
+     * Year range,
+     * Author's last name,
+     * status (absent: quantity = 0/ in stock: quantity > =1)
+    Attributes could be optional 
    
-2. Добавление книги. 
-3. Редактирование книги. 
-4. Продажа книги: просто уменьшение атрибута кол-ва у книги на 1.  Не забыть про конкурентность:)  При попытке продать книгу с нулевым кол-вом выдается ошибка. 
+2. Add a book
+3. Update a book
+4. Sell a book: decrease quantity. Competitiveness
+Exception in case of selling book with zero quantity.
 
 Spring. 
 ORM 
